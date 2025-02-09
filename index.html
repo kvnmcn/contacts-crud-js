@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts | Lists</title>
+    <link rel="stylesheet" href="https://unpkg.com/@sakun/system.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .contacts-dialog {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+
+        .contact {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-inline-start: 0 !important;
+        }
+
+        li {
+            margin-bottom: 1.5rem;
+        }
+
+        li::after {
+            content: "";
+            display: block;
+            border-bottom: 2px dotted #000;
+            margin-top: 8px;
+        }
+
+        .center-2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media only screen and (max-width: 767px) {
+            main {
+                display: none;
+            }
+
+            .mobile-message {
+                display: flex;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            .mobile-message {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header></header>
+
+    <div class="mobile-message center-2">
+        <div class="standard-dialog center scale-down" style="width:80%;">
+            <img src="assets/neko-cat.gif" alt="neko cat" width="15%">
+            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+            <h1 class="dialog-text" style="margin-top: 0;">Sorry!</h1>
+            <p class="dialog-text">This website is not available on mobile devices. Please visit from a laptop, tablet,
+                or
+                desktop.</p>
+            <button class="btn">Go back</button>
+
+        </div>
+    </div>
+    <main>
+
+        <div class="contacts-dialog">
+            <div class="window scale-down" style="width:40rem;">
+                <div class="title-bar">
+                    <button aria-label="Close" class="close"></button>
+                    <h1 class="title">Contacts</h1>
+                    <button aria-label="Resize" disabled class="hidden"></button>
+                </div>
+                <div class="separator"></div>
+                <div class="modeless-dialog" style="padding-top: .5rem;">
+                    <p>Hey there! This is a simple Contact app that demonstrates CRUD functionality using JavaScript.
+                    </p>
+                    <section class="field-row" style="justify-content: flex-end">
+                        <a href="new_contact.html"><button class="btn" style="width:100px;">New Contact</button></a>
+                    </section>
+                </div>
+            </div>
+            <div class="window">
+                <div class="title-bar" style="width:40rem;">
+                    <button aria-label="Close" class="close"></button>
+                    <button aria-label="Resize" class="resize"></button>
+                </div>
+                <div class="separator"></div>
+
+                <div class="window-pane">
+                    <p id="no-contacts-message">There are no contacts available.</p>
+                    <ul id="contact-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <footer></footer>
+
+    <script>
+        let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+
+        function renderContacts() {
+            const contactList = document.getElementById('contact-list');
+            const noContactsMessage = document.getElementById('no-contacts-message');
+
+            contactList.innerHTML = '';
+
+            if (contacts.length === 0) {
+                noContactsMessage.style.display = 'block';
+            } else {
+                noContactsMessage.style.display = 'none';
+
+                contacts.forEach((contact, index) => {
+                    const contactItem = document.createElement('li');
+
+                    contactItem.innerHTML = `
+                        <div>
+                            <div class="contact">
+                                <div style="display: flex; flex-direction:row; gap: .5rem;">
+                                    <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+                                    <div>
+                                        <div>${contact.first_name} ${contact.last_name}</div>
+                                        <small><i class="bi bi-envelope"></i> ${contact.email} <i class="bi bi-telephone"></i> ${contact.contact_number}</small>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction:column; gap: .5rem;">
+                                    <a href="edit_contact.html?id=${index}" class="btn" aria-label="Update Contact">
+                                        Edit
+                                    </a>
+                                    <button class="btn" aria-label="Delete Contact" onclick="deleteContact(${index})">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    contactList.appendChild(contactItem);
+                });
+            }
+        }
+
+        function deleteContact(index) {
+            contacts.splice(index, 1);
+            localStorage.setItem('contacts', JSON.stringify(contacts));
+            renderContacts();
+        }
+
+        renderContacts();
+    </script>
+</body>
+
+</html>
